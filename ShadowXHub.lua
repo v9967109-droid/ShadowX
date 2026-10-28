@@ -8,7 +8,7 @@ do
 		local gui = Instance.new("ScreenGui")
 		gui.Name = "ShadowXLoading"; gui.ResetOnSpawn = false; gui.IgnoreGuiInset = true; gui.DisplayOrder = 10000
 		gui.Parent = host
-		local GOLD, GOLD_L, GRAY = Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30), Color3.fromRGB(165,165,174)
+		local GOLD, GOLD_L, GRAY = Color3.fromRGB(0, 140, 255), Color3.fromRGB(80, 180, 255), Color3.fromRGB(165,165,174)
 		local function mk(class, props, parent)
 			local o = Instance.new(class)
 			for k, v in pairs(props) do o[k] = v end
@@ -23,19 +23,16 @@ do
 		local logo = mk("Frame", {AnchorPoint=Vector2.new(.5,0), Position=UDim2.new(.5,0,0,12), Size=UDim2.fromOffset(46,46), BackgroundColor3=Color3.fromRGB(8,8,10), BorderSizePixel=0}, card)
 		mk("UICorner", {CornerRadius=UDim.new(1,0)}, logo)
 		mk("UIStroke", {Color=GOLD, Thickness=2}, logo)
-		mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,0,0,2), Size=UDim2.new(1,0,0,13), Text="♛", TextColor3=Color3.fromRGB(255, 30, 30), Font=Enum.Font.Fantasy, TextSize=12}, logo)
-		local n = mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,0,0,10), Size=UDim2.new(1,0,1,-12), Text="N", TextColor3=Color3.fromRGB(255, 30, 30), Font=Enum.Font.Arcade, TextSize=26}, logo)
-		mk("UIGradient", {Rotation=90, Color=ColorSequence.new(Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30))}, n)
-		local titleFrame = mk("Frame", {AnchorPoint=Vector2.new(.5,0), Position=UDim2.new(.5,0,0,62), Size=UDim2.fromOffset(220,20), BackgroundTransparency=1}, card)
-		mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,0,0,0), Size=UDim2.new(0.55,0,1,0), Text="Shadow", TextColor3=Color3.fromRGB(255,255,255), Font=Enum.Font.Arcade, TextSize=16, TextXAlignment=Enum.TextXAlignment.Right}, titleFrame)
-		mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0.55,0,0,0), Size=UDim2.new(0.15,0,1,0), Text="X", TextColor3=Color3.fromRGB(255,30,30), Font=Enum.Font.Arcade, TextSize=16, TextXAlignment=Enum.TextXAlignment.Center}, titleFrame)
-		mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0.70,0,0,0), Size=UDim2.new(0.30,0,1,0), Text=" Hub", TextColor3=Color3.fromRGB(255,255,255), Font=Enum.Font.Arcade, TextSize=16, TextXAlignment=Enum.TextXAlignment.Left}, titleFrame)
+		mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,0,0,2), Size=UDim2.new(1,0,0,13), Text="♛", TextColor3=Color3.fromRGB(80, 180, 255), Font=Enum.Font.Fantasy, TextSize=12}, logo)
+		local n = mk("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,0,0,10), Size=UDim2.new(1,0,1,-12), Text="N", TextColor3=Color3.fromRGB(0, 140, 255), Font=Enum.Font.Arcade, TextSize=26}, logo)
+		mk("UIGradient", {Rotation=90, Color=ColorSequence.new(Color3.fromRGB(80, 180, 255), Color3.fromRGB(0, 140, 255))}, n)
+		mk("TextLabel", {AnchorPoint=Vector2.new(.5,0), Position=UDim2.new(.5,0,0,62), Size=UDim2.fromOffset(220,20), BackgroundTransparency=1, Text="ShadowX Hub", TextColor3=Color3.fromRGB(0, 140, 255), Font=Enum.Font.Arcade, TextSize=16}, card)
 		mk("TextLabel", {AnchorPoint=Vector2.new(.5,0), Position=UDim2.new(.5,0,0,80), Size=UDim2.fromOffset(220,14), BackgroundTransparency=1, Text="BLOX FRUITS . ViniZ_DV", TextColor3=Color3.fromRGB(165,165,174), Font=Enum.Font.Code, TextSize=11}, card)
 		local track = mk("Frame", {AnchorPoint=Vector2.new(.5,0), Position=UDim2.new(.5,0,0,92), Size=UDim2.fromOffset(150,3), BackgroundColor3=Color3.fromRGB(30,28,24), BorderSizePixel=0}, card)
 		mk("UICorner", {CornerRadius=UDim.new(1,0)}, track)
 		local fill = mk("Frame", {Size=UDim2.new(0,0,1,0), BackgroundColor3=GOLD, BorderSizePixel=0}, track)
 		mk("UICorner", {CornerRadius=UDim.new(1,0)}, fill)
-		mk("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30))}, fill)
+		mk("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(0, 140, 255), Color3.fromRGB(80, 180, 255))}, fill)
 		local status = mk("TextLabel", {AnchorPoint=Vector2.new(.5,0), Position=UDim2.new(.5,0,0,102), Size=UDim2.fromOffset(220,14), BackgroundTransparency=1, Text="Carregando...", TextColor3=GRAY, Font=Enum.Font.SourceSansBold, TextSize=10}, card)
 		-- entrada rápida + som de abertura
 		TS:Create(card, TweenInfo.new(.18, Enum.EasingStyle.Quad), {GroupTransparency=0}):Play()
@@ -1952,12 +1949,12 @@ local C = {
     bg = Color3.fromRGB(0, 0, 0),
     panel = Color3.fromRGB(10, 10, 15),
     panel2 = Color3.fromRGB(18, 18, 28),
-    line = Color3.fromRGB(255, 30, 30),
-    gold = Color3.fromRGB(255, 30, 30),
-    goldLight = Color3.fromRGB(255, 30, 30),
+    line = Color3.fromRGB(0, 80, 180),
+    gold = Color3.fromRGB(0, 140, 255),
+    goldLight = Color3.fromRGB(80, 180, 255),
     text = Color3.fromRGB(240, 245, 255),
     muted = Color3.fromRGB(140, 150, 170),
-    green = Color3.fromRGB(255, 30, 30),
+    green = Color3.fromRGB(0, 200, 255),
 }
 
 local function make(class, props, parent)
@@ -2077,7 +2074,7 @@ function ShadowX.CreateMain(config)
     if workspace.CurrentCamera then workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(resize) end
 
     local HEADER_H, SIDEBAR_W = 64, 190
-    local GOLD, GOLD_L, GRAY = Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30), Color3.fromRGB(165,165,174)
+    local GOLD, GOLD_L, GRAY = Color3.fromRGB(0, 140, 255), Color3.fromRGB(80, 180, 255), Color3.fromRGB(165,165,174)
     local top = make("Frame", {Size=UDim2.new(1,0,0,HEADER_H), BackgroundColor3=Color3.fromRGB(10,10,14), BorderSizePixel=0}, shell)
     corner(top, 12)
     make("UIGradient", {Rotation=0, Color=ColorSequence.new({
@@ -2098,7 +2095,7 @@ function ShadowX.CreateMain(config)
             end
         end)
     end
-    local title = make("TextLabel", {Position=UDim2.new(0,18,0,10), Size=UDim2.new(0,300,0,26), BackgroundTransparency=1, RichText=true, Text='<font color="#FFFFFF">ShadowX</font> <font color="#FF1E1E">HUB</font>', TextColor3=Color3.fromRGB(255,255,255), Font=Enum.Font.Arcade, TextSize=22, TextXAlignment=Enum.TextXAlignment.Left}, top)
+    local title = make("TextLabel", {Position=UDim2.new(0,18,0,10), Size=UDim2.new(0,300,0,26), BackgroundTransparency=1, RichText=true, Text='<font color="#FFFFFF">ShadowX</font> <font color="#008CFF">HUB</font>', TextColor3=Color3.fromRGB(255,255,255), Font=Enum.Font.Arcade, TextSize=22, TextXAlignment=Enum.TextXAlignment.Left}, top)
     local function tracked(t) return (string.gsub(string.upper(t), "(%S)", "%1\u{2009}")) end
     local desc = make("TextLabel", {Position=UDim2.new(0,19,0,37), Size=UDim2.new(0,300,0,16), BackgroundTransparency=1, Text=tracked("BLOX FRUITS . ViniZ_DV"), TextColor3=GRAY, Font=Enum.Font.Code, TextSize=10, TextXAlignment=Enum.TextXAlignment.Left}, top)
     -- 3 tracinhos removidos da UI como você pediu
@@ -2120,41 +2117,41 @@ function ShadowX.CreateMain(config)
     make("UIStroke", {Color=Color3.fromRGB(60, 60, 65), Thickness=1, Transparency=0.3}, reopen)
     -- Icone N TOP - 100% seguro, sem frames extras que quebram UI
     local iconFrame = make("Frame", {
-        BackgroundColor3=Color3.fromRGB(20, 20, 30),
+        BackgroundColor3=Color3.fromRGB(25, 8, 8) -- Bolinha vermelha bonita sem pulsar,
         Size=UDim2.new(0, 24, 0, 24),
         Position=UDim2.new(0, 6, 0.5, -12),
         BorderSizePixel=0,
         ZIndex=101
     }, reopen)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, iconFrame)
-    make("UIStroke", {Color=Color3.fromRGB(255, 30, 30), Thickness=1.2, Transparency=0.2}, iconFrame)
+    make("UIStroke", {Color=Color3.fromRGB(0, 140, 255), Thickness=1.2, Transparency=0.2}, iconFrame)
     local iconText = make("TextLabel", {
         BackgroundTransparency=1,
         Size=UDim2.new(1, 0, 1, 0),
         Position=UDim2.new(0, 0, 0, 0),
-        Text="SX",
+        Text="N",
         TextColor3=Color3.fromRGB(255, 255, 255),
         Font=Enum.Font.Arcade,
         TextSize=19,
         TextStrokeTransparency=0,
         ZIndex=102
     }, iconFrame)
-    local grad = make("UIGradient", {Rotation=90, Color=ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 30, 30))}, iconText)
-    local txtStroke = make("UIStroke", {Color=Color3.fromRGB(255, 30, 30), Thickness=1.5, Transparency=0}, iconText)
+    local grad = make("UIGradient", {Rotation=90, Color=ColorSequence.new(Color3.fromRGB(150, 230, 255), Color3.fromRGB(0, 140, 255))}, iconText)
+    local txtStroke = make("UIStroke", {Color=Color3.fromRGB(0, 80, 160), Thickness=1.5, Transparency=0}, iconText)
     -- So animacao do texto, nada de frames extras
     task.spawn(function()
         local TS = game:GetService("TweenService")
-        while iconText.Parent do
+        while false do -- FIX: Sem pulsar mais bonita
             pcall(function()
-                TS:Create(iconText, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextSize=22, TextColor3=Color3.fromRGB(255, 255, 255)}):Play()
+                TS:Create(iconText, TweenInfo.new(9999, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextSize=20 -- FIX Sem pulsar, TextColor3=Color3.fromRGB(180, 240, 255)}):Play()
                 TS:Create(grad, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Rotation=120}):Play()
-                TS:Create(txtStroke, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness=2, Color=Color3.fromRGB(255, 30, 30)}):Play()
+                TS:Create(txtStroke, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness=2, Color=Color3.fromRGB(0, 140, 255)}):Play()
             end)
             task.wait(0.6)
             pcall(function()
                 TS:Create(iconText, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextSize=19, TextColor3=Color3.fromRGB(255, 255, 255)}):Play()
                 TS:Create(grad, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Rotation=90}):Play()
-                TS:Create(txtStroke, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness=1.5, Color=Color3.fromRGB(255, 30, 30)}):Play()
+                TS:Create(txtStroke, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness=1.5, Color=Color3.fromRGB(0, 80, 160)}):Play()
             end)
             task.wait(0.6)
         end
@@ -2165,7 +2162,7 @@ function ShadowX.CreateMain(config)
         Position=UDim2.new(0, 2, 0, 2),
         Image="rbxassetid://18747094503",
         ScaleType=Enum.ScaleType.Fit,
-        ImageColor3=Color3.fromRGB(255, 30, 30),
+        ImageColor3=Color3.fromRGB(80, 180, 255),
         ZIndex=102,
         Visible=false
     }, iconFrame)
@@ -2571,9 +2568,9 @@ local fScale = make("UIScale", {Scale=1}, reopen)
             function Section.CreateSlider(cfg, callback)
                 cfg=cfg or {}; local t=cfg.Title or "Slider"; local min=cfg.Min or cfg.MinValue or 0; local max=cfg.Max or cfg.MaxValue or 100; local val=math.clamp(cfg.Default or cfg.Value or min,min,max)
                 local r=row(52); label(make("Frame",{Size=UDim2.new(1,-70,0,22),BackgroundTransparency=1},r),t,11,C.text)
-                local num=label(make("Frame",{Position=UDim2.new(1,-65,0,0),Size=UDim2.new(0,65,0,22),BackgroundTransparency=1},r),val,11,Color3.fromRGB(255, 30, 30)); num.TextXAlignment=Enum.TextXAlignment.Right
+                local num=label(make("Frame",{Position=UDim2.new(1,-65,0,0),Size=UDim2.new(0,65,0,22),BackgroundTransparency=1},r),val,11,Color3.fromRGB(0,140,255)); num.TextXAlignment=Enum.TextXAlignment.Right
                 local bar=make("Frame",{Position=UDim2.new(0,0,0,30),Size=UDim2.new(1,0,0,6),BackgroundColor3=Color3.fromRGB(45,45,55),BorderSizePixel=0},r); corner(bar,10)
-                local fill=make("Frame",{Size=UDim2.new((val-min)/math.max(1,max-min),0,1,0),BackgroundColor3=Color3.fromRGB(255, 30, 30),BorderSizePixel=0},bar); corner(fill,10)
+                local fill=make("Frame",{Size=UDim2.new((val-min)/math.max(1,max-min),0,1,0),BackgroundColor3=Color3.fromRGB(0,140,255),BorderSizePixel=0},bar); corner(fill,10)
                 local knob=make("Frame",{AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.new((val-min)/math.max(1,max-min),0,0.5,0),Size=UDim2.fromOffset(14,14),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0},bar); corner(knob,10)
                 local hit=make("TextButton",{Size=UDim2.new(1,0,0,24),Position=UDim2.new(0,0,0,-9),BackgroundTransparency=1,Text="",TextTransparency=1},bar)
                 local opt
@@ -2783,23 +2780,23 @@ local fScale = make("UIScale", {Scale=1}, reopen)
         local container = getNotifContainer()
         local card = make("Frame", {Name="Notif", BackgroundColor3=Color3.fromRGB(15,15,20), BorderSizePixel=0, Size=UDim2.new(0,310,0,72), ClipsDescendants=true}, container)
         corner(card, 14)
-        local border = make("UIStroke", {Color=Color3.fromRGB(255, 30, 30), Thickness=1.2, Transparency=0.2, ApplyStrokeMode=Enum.ApplyStrokeMode.Border}, card)
+        local border = make("UIStroke", {Color=Color3.fromRGB(0,140,255), Thickness=1.2, Transparency=0.2, ApplyStrokeMode=Enum.ApplyStrokeMode.Border}, card)
         make("UIGradient", {Color=ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(25,25,35)), ColorSequenceKeypoint.new(1, Color3.fromRGB(12,12,18))}, Rotation=90}, card)
-        local sideBar = make("Frame", {Name="SideBar", BackgroundColor3=Color3.fromRGB(255, 30, 30), BorderSizePixel=0, Size=UDim2.new(0,3,1,0)}, card)
+        local sideBar = make("Frame", {Name="SideBar", BackgroundColor3=Color3.fromRGB(0,140,255), BorderSizePixel=0, Size=UDim2.new(0,3,1,0)}, card)
         corner(sideBar, 2)
-        make("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30)), Rotation=90}, sideBar)
+        make("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(80,180,255), Color3.fromRGB(0,100,220)), Rotation=90}, sideBar)
         local iconBg = make("Frame", {BackgroundColor3=Color3.fromRGB(28,28,40), Size=UDim2.new(0,36,0,36), Position=UDim2.new(0,14,0,10), BorderSizePixel=0}, card)
         corner(iconBg, 10)
-        make("UIStroke", {Color=Color3.fromRGB(255, 30, 30), Transparency=0.6, Thickness=1}, iconBg)
-        local iconText = make("TextLabel", {BackgroundTransparency=1, Size=UDim2.new(1,0,1,0), Text="N", TextColor3=Color3.fromRGB(255, 30, 30), Font=Enum.Font.Arcade, TextSize=20}, iconBg)
-        make("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30)), Rotation=90}, iconText)
+        make("UIStroke", {Color=Color3.fromRGB(0,140,255), Transparency=0.6, Thickness=1}, iconBg)
+        local iconText = make("TextLabel", {BackgroundTransparency=1, Size=UDim2.new(1,0,1,0), Text="N", TextColor3=Color3.fromRGB(0,140,255), Font=Enum.Font.Arcade, TextSize=20}, iconBg)
+        make("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(80,180,255), Color3.fromRGB(0,140,255)), Rotation=90}, iconText)
         make("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,62,0,8), Size=UDim2.new(1,-70,0,18), Text=string.upper(title), TextColor3=Color3.fromRGB(255,255,255), Font=Enum.Font.Fantasy, TextSize=12, TextXAlignment=Enum.TextXAlignment.Left, TextTruncate=Enum.TextTruncate.AtEnd}, card)
         make("TextLabel", {BackgroundTransparency=1, Position=UDim2.new(0,62,0,28), Size=UDim2.new(1,-70,0,32), Text=desc, TextColor3=Color3.fromRGB(180,190,210), Font=Enum.Font.SourceSansBold, TextSize=11, TextXAlignment=Enum.TextXAlignment.Left, TextYAlignment=Enum.TextYAlignment.Top, TextWrapped=true}, card)
         local progressBg = make("Frame", {BackgroundColor3=Color3.fromRGB(30,30,40), BorderSizePixel=0, Size=UDim2.new(1,-16,0,2), Position=UDim2.new(0,8,1,-6)}, card)
         corner(progressBg, 1)
-        local progressBar = make("Frame", {BackgroundColor3=Color3.fromRGB(255, 30, 30), BorderSizePixel=0, Size=UDim2.new(1,0,1,0)}, progressBg)
+        local progressBar = make("Frame", {BackgroundColor3=Color3.fromRGB(0,140,255), BorderSizePixel=0, Size=UDim2.new(1,0,1,0)}, progressBg)
         corner(progressBar, 1)
-        make("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(255, 30, 30), Color3.fromRGB(255, 30, 30)), Rotation=0}, progressBar)
+        make("UIGradient", {Color=ColorSequence.new(Color3.fromRGB(80,180,255), Color3.fromRGB(0,100,220)), Rotation=0}, progressBar)
         card.Position = UDim2.new(0,340,0,0)
         card.Size = UDim2.new(0,310,0,0)
         TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(0,0,0,0), Size=UDim2.new(0,310,0,72)}):Play()
@@ -3543,7 +3540,7 @@ SectionServer.CreateButton({ Title = "Open Gui Server Browser (Low Player and Pi
 			ROW_TOP = Color3.fromRGB(10, 22, 34),
 			BORDER = Color3.fromRGB(28, 31, 48),
 			BORDER_HOV = Color3.fromRGB(0, 80, 120),
-			CYAN = Color3.fromRGB(255, 30, 30),
+			CYAN = Color3.fromRGB(0, 212, 255),
 			CYAN_DIM = Color3.fromRGB(0, 80, 120),
 			GREEN = Color3.fromRGB(0, 204, 102),
 			GREEN_GLOW = Color3.fromRGB(0, 255, 136),
@@ -5987,7 +5984,7 @@ task.spawn(function()
 			local root = char:FindFirstChild("HumanoidRootPart")
 			if not root then return end
 			local anyActive = Settings["Raise Boat Manual Drive"] or Settings["Fly Boat"] or Settings["Start Farm"] or Settings["Auto Find Leviathan"] or Settings["Auto Find Prehistoric Island"] or Settings["Auto Multi Find Prehistoric Island"] or Settings["Auto Event Prehistoric Island"] or Settings["Auto Sea Event"] or Settings["Teleport To Fruit"] or Settings["Auto Farm Level"] or Settings["Tween Boat To Frozen Dimension"] or Settings["Multi Find Leviathan"] or Settings["Auto Farm Bone"] or Settings["Auto Farm Ectoplasm"] or Settings["Auto Elite Hunter"] or Settings["Auto Factory"] or Settings["Auto Raid"] or Settings["Tween Safe if have Items"] or Settings["Auto Present Event"] or Settings["Auto Celestial Soldier"] or Settings["Auto Attack Dungeon"] or Settings["Auto Fishing"] or Settings["Auto Get Ghoul"] or Settings["Auto Get Cyborg"] or Settings["Auto Trial"] or Settings["Auto Pull Lever"] or Settings["Drive Boat To Tiki"] or Settings["Drive Boat To Hydra"] or Settings["Auto Fire Shoot Heart Leviathan"]
-			if not anyActive and getgenv().noclip then
+			if not anyActive and getgenv().noclip and not Settings["Fully Event Prehistoric Island"] and not Settings["Auto Find Prehistoric Island"] then
 				ForceResetAirState()
 			end
 		end)
@@ -16351,7 +16348,7 @@ ToggleFindMirage = FarmingSeaEventSection.CreateToggle(
 									manageTween(P.VehicleSeat, Y, 350, "TweenBoat")
 								end
 							until not Settings["Auto Find Mirage"]
-								or not t.Character.Humanoid.Sit
+								or (not t.Character.Humanoid.Sit and not Settings["Fully Event Prehistoric Island"] and not Settings["Auto Find Prehistoric Island"])
 								or (game:GetService("Workspace").Map:FindFirstChild("MysticIsland"))
 							if getgenv().TweenBoat then
 								getgenv().TweenBoat:Pause()
@@ -17218,7 +17215,7 @@ function AutoFindLeviathan()
 					manageTween(g.VehicleSeat, y, 350, "TweenBoat")
 				end
 			until not Settings["Auto Find Leviathan"]
-				or not t.Character.Humanoid.Sit
+				or (not t.Character.Humanoid.Sit and not Settings["Fully Event Prehistoric Island"] and not Settings["Auto Find Prehistoric Island"])
 				or (game.workspace._WorldOrigin.Locations:FindFirstChild("Frozen Dimension"))
 				or Settings["Auto Destroy IDK"] and getgenv().DesIdk
 			g.VehicleSeat.BodyVelocity.MaxForce = Z
@@ -18296,7 +18293,7 @@ BoatSettingSection.CreateToggle({ Title = "Fly Boat", Desc = nil, Default = Sett
 						end
 						repeat
 							wait()
-						until not Settings["Fly Boat"] or not t.Character.Humanoid.Sit
+						until not Settings["Fly Boat"] or (not t.Character.Humanoid.Sit and not Settings["Fully Event Prehistoric Island"] and not Settings["Auto Find Prehistoric Island"])
 						if not b then
 							NOFLY()
 						else
@@ -24132,7 +24129,7 @@ function AutoFindPrehistoric()
 				end
 			until not Settings["Auto Find Prehistoric Island"]
 				and not Settings["Auto Multi Find Prehistoric Island"]
-				or not t.Character.Humanoid.Sit
+				or (not t.Character.Humanoid.Sit and not Settings["Fully Event Prehistoric Island"] and not Settings["Auto Find Prehistoric Island"])
 				or (game:GetService("Workspace").Map:FindFirstChild("PrehistoricIsland"))
 			if getgenv().TweenBoat then
 				getgenv().TweenBoat:Pause()
@@ -24559,6 +24556,7 @@ FarmingVolcanoSection.CreateToggle(
 	end
 )
 function FullyEventVolcano()
+	pcall(function() if Settings["Fully Event Prehistoric Island"] then getgenv().noclip = true end end)
 	-- Usa o ciclo dedicado do Dragon Hunter para continuar solicitando missões após cada conclusão.
 	-- O NPC pode não estar replicado à distância; o helper encaminha primeiro para Hydra/Dojo.
 	if not game:GetService("Workspace").Map:FindFirstChild("PrehistoricIsland")
@@ -25423,9 +25421,9 @@ function ESPPlayer()
 					if plr and plr.Team then
 						teamName = plr.Team.Name
 						if teamName:lower():find("pirate") or teamName:lower():find("pirata") then
-							teamColor = Color3.fromRGB(255, 50, 50)
-						elseif teamName:lower():find("marine") then
-							teamColor = Color3.fromRGB(255, 30, 30)
+							teamColor = Color3.fromRGB(255, 50, 50) -- Pirates vermelho
+						elseif teamName:lower():find("marine") or teamName:lower():find("marin") or teamName:lower():find("marinha") then
+							teamColor = Color3.fromRGB(80, 130, 255) -- FIX: Marines azul (não vermelho)
 						else
 							teamColor = Color3.fromRGB(255, 215, 0)
 						end
@@ -30288,3 +30286,72 @@ function UseDragonstormAllSeaEvents(Part)
 end
 
 print("[ShadowX] DragonStorm FAST 0.06s - No 2s delay - ViniZ_DV")
+
+-- FIX FINAL: Fully Event Prehistoric Island sem Raise Boat Manual Drive
+task.spawn(function()
+    while true do
+        task.wait(0.2)
+        pcall(function()
+            if Settings and (Settings["Fully Event Prehistoric Island"] or Settings["Auto Find Prehistoric Island"] or Settings["Auto Event Prehistoric Island"] or Settings["Auto Multi Find Prehistoric Island"]) then
+                getgenv().noclip = true
+                local player = game:GetService("Players").LocalPlayer
+                if player and player.Character then
+                    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                    local root = player.Character:FindFirstChild("HumanoidRootPart")
+                    if humanoid and root then
+                        if not humanoid.SeatPart then
+                            for _, obj in ipairs(workspace:GetChildren()) do
+                                if obj:FindFirstChild("VehicleSeat") then
+                                    local seat = obj.VehicleSeat
+                                    if (seat.Position - root.Position).Magnitude < 30 then
+                                        seat:Sit(humanoid)
+                                        task.wait(0.1)
+                                        break
+                                    end
+                                end
+                            end
+                        else
+                            local boat = humanoid.SeatPart.Parent
+                            if boat then
+                                for _, part in ipairs(boat:GetDescendants()) do
+                                    if part:IsA("BasePart") and not part:IsA("VehicleSeat") and not part:IsA("Seat") then
+                                        part.CanCollide = false
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+print("[ShadowX Fix] Fully Prehistoric sem Raise Boat - Anti pulo do seat - FIXED")
+
+-- FIX COMPREENSIVO: Kitsune Island Sea 5/6 - Remove trava do barco e teleport longe
+task.spawn(function()
+    while true do
+        task.wait(1)
+        pcall(function()
+            if Settings["Auto Spawn Kitsune Island"] or Settings["Auto Find Kitsune Island"] then
+                -- Se está no Sea 5 ou 6, não trava barco
+                local placeId = game.PlaceId
+                if placeId == 7449423635 or placeId == 4442272183 or placeId == 7441399538 then -- Sea 6, 5, 3
+                    getgenv().BoatLock = false
+                    -- Não teleporta player longe
+                    local player = game:GetService("Players").LocalPlayer
+                    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local root = player.Character.HumanoidRootPart
+                        -- Se root está muito longe (bug teleport), traz de volta pro barco
+                        if root.Position.Magnitude > 100000 then
+                            local boat = workspace:FindFirstChild("Boat") or workspace:FindFirstChild("Vehicle")
+                            if boat and boat:FindFirstChild("VehicleSeat") then
+                                root.CFrame = boat.VehicleSeat.CFrame * CFrame.new(0, 5, 0)
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
