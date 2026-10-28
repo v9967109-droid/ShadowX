@@ -30355,3 +30355,363 @@ task.spawn(function()
         end)
     end
 end)
+
+
+-- FIX: Trial, BringMob, NPC Great Tree - Override functions
+task.wait(2)
+
+print("[ShadowX Fix] Aplicando fixes Trial, BringMob, NPC Great Tree...")
+
+-- FIX 1: Detectar NPC somente do topo da Great Tree, nao outro com mystery no nome
+getgenv().GetMysteriousForceNPC = function()
+    local workspace = game:GetService("Workspace")
+    local greatTreePos = Vector3.new(4345, 575, -6159)
+    local closestNPC = nil
+    local closestDist = math.huge
+    
+    for _, obj in ipairs(workspace:GetChildren()) do
+        if obj:IsA("Model") and obj:FindFirstChild("HumanoidRootPart") then
+            local name = string.lower(obj.Name)
+            if name:find("mysterious") and name:find("force") then
+                local pos = obj.HumanoidRootPart.Position
+                local distToTree = (Vector3.new(pos.X, 0, pos.Z) - Vector3.new(greatTreePos.X, 0, greatTreePos.Z)).Magnitude
+                if pos.Y > 800 and distToTree < 500 then
+                    local dist = (pos - greatTreePos).Magnitude
+                    if dist < closestDist then
+                        closestDist = dist
+                        closestNPC = obj
+                    end
+                end
+            end
+        end
+    end
+    
+    if not closestNPC then
+        local misc = workspace:FindFirstChild("MISC") or workspace:FindFirstChild("Map")
+        if misc then
+            for _, obj in ipairs(misc:GetDescendants()) do
+                if obj:IsA("Model") and obj:FindFirstChild("HumanoidRootPart") then
+                    local name = string.lower(obj.Name)
+                    if name:find("mysterious") and name:find("force") then
+                        local pos = obj.HumanoidRootPart.Position
+                        local distToTree = (Vector3.new(pos.X, 0, pos.Z) - Vector3.new(greatTreePos.X, 0, greatTreePos.Z)).Magnitude
+                        if pos.Y > 800 and distToTree < 500 then
+                            closestNPC = obj
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    return closestNPC
+end
+
+-- FIX 2: Se morrer/resetar, toTarget ate NPC nao para, continua indo
+pcall(function()
+    local player = game:GetService("Players").LocalPlayer
+    if player then
+        player.CharacterAdded:Connect(function(char)
+            char:WaitForChild("HumanoidRootPart", 10)
+            task.wait(1)
+            if Settings and Settings["Auto Trial"] then
+                print("[ShadowX] Morreu/resetou, continuando Auto Trial ate NPC")
+                -- Forca continuar o trial
+                getgenv().TrialReset = true
+                task.wait(0.5)
+                getgenv().TrialReset = false
+            end
+        end)
+    end
+end)
+
+-- FIX 3: Bring Mob nao puxa NPC de uma vez e bugando - puxa devagar
+getgenv().BringMob = function(mob)
+    if not mob or not mob:FindFirstChild("HumanoidRootPart") then return end
+    local name = string.lower(mob.Name)
+    if name:find("mysterious") or name:find("force") or name:find("mystic") then
+        return
+    end
+    if mob:FindFirstChild("Humanoid") then
+        local display = mob.Humanoid.DisplayName or ""
+        if string.lower(display):find("mysterious") then
+            return
+        end
+    end
+    pcall(function()
+        local root = mob.HumanoidRootPart
+        local player = game:GetService("Players").LocalPlayer
+        if not player or not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return end
+        local playerRoot = player.Character.HumanoidRootPart
+        -- Puxa devagar com Tween, nao instantaneo
+        local tweenService = game:GetService("TweenService")
+        local targetPos = playerRoot.Position + Vector3.new(0, 10, 0) + Vector3.new(math.random(-5,5), 0, math.random(-5,5))
+        local tween = tweenService:Create(root, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {CFrame = CFrame.new(targetPos)})
+        tween:Play()
+        local bv = Instance.new("BodyVelocity")
+        bv.Velocity = Vector3.new(0,0,0)
+        bv.MaxForce = Vector3.new(1000,1000,1000)
+        bv.Parent = root
+        game:GetService("Debris"):AddItem(bv, 1)
+    end)
+end
+
+_G.BringMob = getgenv().BringMob
+_G.GetMysteriousForceNPC = getgenv().GetMysteriousForceNPC
+
+-- FIX: Click handling - usa fireproximityprompt e fireclickdetector corretamente
+getgenv().ClickMysteriousForce = function(npc)
+    if not npc then return end
+    pcall(function()
+        local prompt = npc:FindFirstChildOfClass("ProximityPrompt", true)
+        if prompt then
+            fireproximityprompt(prompt)
+        else
+            local clickDetector = npc:FindFirstChildOfClass("ClickDetector", true)
+            if clickDetector then
+                fireclickdetector(clickDetector)
+            else
+                -- Tenta via VirtualInputManager com check de UI
+                local playerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+                local uiOpen = playerGui and (playerGui:FindFirstChild("ShadowX Hub") or game:GetService("CoreGui"):FindFirstChild("ShadowX Hub"))
+                if not uiOpen or not uiOpen.Enabled then
+                    local vim = game:GetService("VirtualInputManager")
+                    local cam = workspace.CurrentCamera
+                    local pos, onScreen = cam:WorldToViewportPoint(npc.HumanoidRootPart.Position)
+                    if onScreen then
+                        vim:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 0)
+                        task.wait(0.05)
+                        vim:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 0)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+print("[ShadowX Fix] Trial, BringMob, NPC Great Tree - FIXED!")
+print("[ShadowX] NPC so topo Great Tree, toTarget continua apos morte, BringMob nao puxa NPC")
+
+
+-- FIX: Bring Mob puxa NPCs devagar com Tween, nao de uma vez instantaneo que buga
+getgenv().BringMob = function(mob)
+    if not mob or not mob:FindFirstChild("HumanoidRootPart") then return end
+    if not mob:FindFirstChild("Humanoid") then return end
+    if mob.Humanoid.Health <= 0 then return end
+    
+    pcall(function()
+        local root = mob.HumanoidRootPart
+        local player = game:GetService("Players").LocalPlayer
+        if not player or not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return end
+        local playerRoot = player.Character.HumanoidRootPart
+        
+        -- So puxa se estiver longe (evita ficar puxando sem parar e bugando)
+        local dist = (root.Position - playerRoot.Position).Magnitude
+        if dist < 10 then return end -- Ja ta perto, nao precisa puxar
+        
+        -- Puxa DEVAGAR com Tween 0.5s, nao instantaneo
+        local tweenService = game:GetService("TweenService")
+        local targetPos = playerRoot.Position + Vector3.new(math.random(-5,5), 5, math.random(-5,5))
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        local tween = tweenService:Create(root, tweenInfo, {CFrame = CFrame.new(targetPos)})
+        tween:Play()
+        
+        -- BodyVelocity devagar tambem pra nao bugar
+        local bv = root:FindFirstChild("BringMobBV")
+        if not bv then
+            bv = Instance.new("BodyVelocity")
+            bv.Name = "BringMobBV"
+            bv.MaxForce = Vector3.new(4000, 4000, 4000)
+            bv.Velocity = Vector3.new(0,0,0)
+            bv.Parent = root
+        end
+        bv.Velocity = (targetPos - root.Position).Unit * 15 -- Devagar, nao rapido
+        
+        game:GetService("Debris"):AddItem(bv, 1.5)
+    end)
+end
+
+_G.BringMob = getgenv().BringMob
+
+-- Tambem fixa o BringMob antigo que tava no script original
+pcall(function()
+    if _G.BringMob_OLD then
+        _G.BringMob_OLD = _G.BringMob
+    end
+end)
+
+print("[ShadowX Fix] Bring Mob agora puxa DEVAGAR com Tween 0.5s, nao instantaneo - FIXED!")
+
+
+-- ==================== SHADOWX HUB AUTO UPDATE SYSTEM ====================
+-- Tela de atualizacao que detecta nova versao no GitHub e faz auto rejoin
+
+getgenv().ShadowXVersion = "1.0.0" -- Versao atual
+getgenv().GitHubVersionURL = "https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/version.txt" -- URL da versao no GitHub
+getgenv().GitHubScriptURL = "https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/ShadowX_Hub.lua" -- URL do script
+
+task.spawn(function()
+    while true do
+        task.wait(60) -- Checa a cada 60 segundos
+        pcall(function()
+            local HttpService = game:GetService("HttpService")
+            local Players = game:GetService("Players")
+            local TeleportService = game:GetService("TeleportService")
+            local LocalPlayer = Players.LocalPlayer
+            
+            -- Pega versao do GitHub
+            local success, githubVersion = pcall(function()
+                return game:HttpGet(getgenv().GitHubVersionURL)
+            end)
+            
+            if success and githubVersion then
+                githubVersion = string.gsub(githubVersion, "%s+", "") -- Remove espacos
+                local currentVersion = getgenv().ShadowXVersion
+                
+                if githubVersion ~= currentVersion and githubVersion ~= "" then
+                    print("[ShadowX Update] Nova versao detectada: " .. githubVersion .. " (atual: " .. currentVersion .. ")")
+                    
+                    -- Mostra tela full screen em ingles
+                    local playerGui = LocalPlayer:FindFirstChild("PlayerGui")
+                    if playerGui then
+                        local screenGui = Instance.new("ScreenGui")
+                        screenGui.Name = "ShadowXUpdateScreen"
+                        screenGui.ResetOnSpawn = false
+                        screenGui.IgnoreGuiInset = true
+                        screenGui.DisplayOrder = 999999
+                        screenGui.Parent = playerGui
+                        
+                        local bg = Instance.new("Frame")
+                        bg.Size = UDim2.new(1,0,1,0)
+                        bg.Position = UDim2.new(0,0,0,0)
+                        bg.BackgroundColor3 = Color3.fromRGB(0,0,0)
+                        bg.BackgroundTransparency = 0.2
+                        bg.BorderSizePixel = 0
+                        bg.Parent = screenGui
+                        
+                        local blur = Instance.new("Frame")
+                        blur.Size = UDim2.new(1,0,1,0)
+                        blur.BackgroundColor3 = Color3.fromRGB(10,10,15)
+                        blur.BackgroundTransparency = 0.1
+                        blur.Parent = bg
+                        
+                        local card = Instance.new("Frame")
+                        card.AnchorPoint = Vector2.new(0.5,0.5)
+                        card.Position = UDim2.new(0.5,0,0.5,0)
+                        card.Size = UDim2.new(0,400,0,250)
+                        card.BackgroundColor3 = Color3.fromRGB(15,15,20)
+                        card.BorderSizePixel = 0
+                        card.Parent = bg
+                        
+                        local corner = Instance.new("UICorner")
+                        corner.CornerRadius = UDim.new(0,16)
+                        corner.Parent = card
+                        
+                        local stroke = Instance.new("UIStroke")
+                        stroke.Color = Color3.fromRGB(255,30,30)
+                        stroke.Thickness = 2
+                        stroke.Transparency = 0.2
+                        stroke.Parent = card
+                        
+                        local title = Instance.new("TextLabel")
+                        title.Size = UDim2.new(1,0,0,50)
+                        title.Position = UDim2.new(0,0,0,10)
+                        title.BackgroundTransparency = 1
+                        title.Text = "ShadowX Hub Update"
+                        title.TextColor3 = Color3.fromRGB(255,255,255)
+                        title.Font = Enum.Font.GothamBold
+                        title.TextSize = 24
+                        title.Parent = card
+                        
+                        local msg = Instance.new("TextLabel")
+                        msg.Size = UDim2.new(1,0,0,80)
+                        msg.Position = UDim2.new(0,0,0,60)
+                        msg.BackgroundTransparency = 1
+                        msg.Text = "A new version of the script is available!\n\nCurrent: " .. currentVersion .. "\nNew: " .. githubVersion .. "\n\nRejoining server..."
+                        msg.TextColor3 = Color3.fromRGB(200,200,200)
+                        msg.Font = Enum.Font.Gotham
+                        msg.TextSize = 16
+                        msg.TextWrapped = true
+                        msg.Parent = card
+                        
+                        local bar = Instance.new("Frame")
+                        bar.Size = UDim2.new(0,0,0,4)
+                        bar.Position = UDim2.new(0,0,1,-4)
+                        bar.BackgroundColor3 = Color3.fromRGB(255,30,30)
+                        bar.BorderSizePixel = 0
+                        bar.Parent = card
+                        
+                        local barCorner = Instance.new("UICorner")
+                        barCorner.CornerRadius = UDim.new(0,16)
+                        barCorner.Parent = bar
+                        
+                        -- Animacao da barra
+                        game:GetService("TweenService"):Create(bar, TweenInfo.new(3, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,4)}):Play()
+                        
+                        task.wait(3)
+                        
+                        -- Auto rejoin
+                        local placeId = game.PlaceId
+                        local jobId = game.JobId
+                        
+                        -- Verifica se e servidor privado
+                        local isPrivate = false
+                        pcall(function()
+                            if game.PrivateServerId and game.PrivateServerId ~= "" and game.PrivateServerOwnerId ~= 0 then
+                                isPrivate = true
+                            end
+                        end)
+                        
+                        if isPrivate then
+                            -- Se for privado, da Hop server less people
+                            print("[ShadowX Update] Private server, hopping to less populated server...")
+                            pcall(function()
+                                -- Hop server less people
+                                local servers = {}
+                                local success, result = pcall(function()
+                                    return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"))
+                                end)
+                                if success and result and result.data then
+                                    for _, server in ipairs(result.data) do
+                                        if server.playing < server.maxPlayers - 2 and server.id ~= jobId then
+                                            table.insert(servers, server)
+                                        end
+                                    end
+                                    if #servers > 0 then
+                                        table.sort(servers, function(a,b) return a.playing < b.playing end)
+                                        TeleportService:TeleportToPlaceInstance(placeId, servers[1].id, LocalPlayer)
+                                    else
+                                        TeleportService:Teleport(placeId, LocalPlayer)
+                                    end
+                                else
+                                    -- Fallback: Hop normal
+                                    local TeleportModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/HopServer.lua"))()
+                                    if TeleportModule then
+                                        TeleportModule()
+                                    else
+                                        TeleportService:Teleport(placeId, LocalPlayer)
+                                    end
+                                end
+                            end)
+                        else
+                            -- Se for publico, reentra no mesmo servidor
+                            print("[ShadowX Update] Public server, rejoining same server: " .. jobId)
+                            pcall(function()
+                                TeleportService:TeleportToPlaceInstance(placeId, jobId, LocalPlayer)
+                            end)
+                            task.wait(1)
+                            -- Fallback se falhar
+                            pcall(function()
+                                TeleportService:Teleport(placeId, LocalPlayer)
+                            end)
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+print("[ShadowX Update System] Auto update checker started - Checks GitHub every 60s")
+print("[ShadowX Update] GitHub URL: " .. getgenv().GitHubVersionURL)
