@@ -30543,175 +30543,83 @@ end)
 
 print("[ShadowX Fix] Bring Mob agora puxa DEVAGAR com Tween 0.5s, nao instantaneo - FIXED!")
 
-
--- ==================== SHADOWX HUB AUTO UPDATE SYSTEM ====================
--- Tela de atualizacao que detecta nova versao no GitHub e faz auto rejoin
-
-getgenv().ShadowXVersion = "1.0.0" -- Versao atual
-getgenv().GitHubVersionURL = "https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/version.txt" -- URL da versao no GitHub
-getgenv().GitHubScriptURL = "https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/ShadowX_Hub.lua" -- URL do script
+-- SHADOWX UPDATE SYSTEM - Minimal, nao quebra execucao
+getgenv().ShadowXVersion = "1.0.0"
+getgenv().GitHubVersionURL = "https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/version.txt"
 
 task.spawn(function()
+    task.wait(10)
     while true do
-        task.wait(60) -- Checa a cada 60 segundos
+        task.wait(60)
         pcall(function()
-            local HttpService = game:GetService("HttpService")
-            local Players = game:GetService("Players")
-            local TeleportService = game:GetService("TeleportService")
-            local LocalPlayer = Players.LocalPlayer
-            
-            -- Pega versao do GitHub
-            local success, githubVersion = pcall(function()
-                return game:HttpGet(getgenv().GitHubVersionURL)
-            end)
-            
+            local success, githubVersion = pcall(function() return game:HttpGet(getgenv().GitHubVersionURL) end)
             if success and githubVersion then
-                githubVersion = string.gsub(githubVersion, "%s+", "") -- Remove espacos
-                local currentVersion = getgenv().ShadowXVersion
-                
-                if githubVersion ~= currentVersion and githubVersion ~= "" then
-                    print("[ShadowX Update] Nova versao detectada: " .. githubVersion .. " (atual: " .. currentVersion .. ")")
-                    
-                    -- Mostra tela full screen em ingles
-                    local playerGui = LocalPlayer:FindFirstChild("PlayerGui")
-                    if playerGui then
-                        local screenGui = Instance.new("ScreenGui")
-                        screenGui.Name = "ShadowXUpdateScreen"
-                        screenGui.ResetOnSpawn = false
-                        screenGui.IgnoreGuiInset = true
-                        screenGui.DisplayOrder = 999999
-                        screenGui.Parent = playerGui
-                        
-                        local bg = Instance.new("Frame")
-                        bg.Size = UDim2.new(1,0,1,0)
-                        bg.Position = UDim2.new(0,0,0,0)
-                        bg.BackgroundColor3 = Color3.fromRGB(0,0,0)
-                        bg.BackgroundTransparency = 0.2
-                        bg.BorderSizePixel = 0
-                        bg.Parent = screenGui
-                        
-                        local blur = Instance.new("Frame")
-                        blur.Size = UDim2.new(1,0,1,0)
-                        blur.BackgroundColor3 = Color3.fromRGB(10,10,15)
-                        blur.BackgroundTransparency = 0.1
-                        blur.Parent = bg
-                        
-                        local card = Instance.new("Frame")
-                        card.AnchorPoint = Vector2.new(0.5,0.5)
-                        card.Position = UDim2.new(0.5,0,0.5,0)
-                        card.Size = UDim2.new(0,400,0,250)
-                        card.BackgroundColor3 = Color3.fromRGB(15,15,20)
-                        card.BorderSizePixel = 0
-                        card.Parent = bg
-                        
-                        local corner = Instance.new("UICorner")
-                        corner.CornerRadius = UDim.new(0,16)
-                        corner.Parent = card
-                        
-                        local stroke = Instance.new("UIStroke")
-                        stroke.Color = Color3.fromRGB(255,30,30)
-                        stroke.Thickness = 2
-                        stroke.Transparency = 0.2
-                        stroke.Parent = card
-                        
-                        local title = Instance.new("TextLabel")
-                        title.Size = UDim2.new(1,0,0,50)
-                        title.Position = UDim2.new(0,0,0,10)
-                        title.BackgroundTransparency = 1
-                        title.Text = "ShadowX Hub Update"
-                        title.TextColor3 = Color3.fromRGB(255,255,255)
-                        title.Font = Enum.Font.GothamBold
-                        title.TextSize = 24
-                        title.Parent = card
-                        
-                        local msg = Instance.new("TextLabel")
-                        msg.Size = UDim2.new(1,0,0,80)
-                        msg.Position = UDim2.new(0,0,0,60)
-                        msg.BackgroundTransparency = 1
-                        msg.Text = "A new version of the script is available!\n\nCurrent: " .. currentVersion .. "\nNew: " .. githubVersion .. "\n\nRejoining server..."
-                        msg.TextColor3 = Color3.fromRGB(200,200,200)
-                        msg.Font = Enum.Font.Gotham
-                        msg.TextSize = 16
-                        msg.TextWrapped = true
-                        msg.Parent = card
-                        
-                        local bar = Instance.new("Frame")
-                        bar.Size = UDim2.new(0,0,0,4)
-                        bar.Position = UDim2.new(0,0,1,-4)
-                        bar.BackgroundColor3 = Color3.fromRGB(255,30,30)
-                        bar.BorderSizePixel = 0
-                        bar.Parent = card
-                        
-                        local barCorner = Instance.new("UICorner")
-                        barCorner.CornerRadius = UDim.new(0,16)
-                        barCorner.Parent = bar
-                        
-                        -- Animacao da barra
-                        game:GetService("TweenService"):Create(bar, TweenInfo.new(3, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,4)}):Play()
-                        
-                        task.wait(3)
-                        
-                        -- Auto rejoin
-                        local placeId = game.PlaceId
-                        local jobId = game.JobId
-                        
-                        -- Verifica se e servidor privado
-                        local isPrivate = false
-                        pcall(function()
-                            if game.PrivateServerId and game.PrivateServerId ~= "" and game.PrivateServerOwnerId ~= 0 then
-                                isPrivate = true
-                            end
-                        end)
-                        
-                        if isPrivate then
-                            -- Se for privado, da Hop server less people
-                            print("[ShadowX Update] Private server, hopping to less populated server...")
-                            pcall(function()
-                                -- Hop server less people
-                                local servers = {}
-                                local success, result = pcall(function()
-                                    return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"))
-                                end)
-                                if success and result and result.data then
-                                    for _, server in ipairs(result.data) do
-                                        if server.playing < server.maxPlayers - 2 and server.id ~= jobId then
-                                            table.insert(servers, server)
-                                        end
-                                    end
-                                    if #servers > 0 then
-                                        table.sort(servers, function(a,b) return a.playing < b.playing end)
-                                        TeleportService:TeleportToPlaceInstance(placeId, servers[1].id, LocalPlayer)
-                                    else
-                                        TeleportService:Teleport(placeId, LocalPlayer)
-                                    end
-                                else
-                                    -- Fallback: Hop normal
-                                    local TeleportModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/ViniZ-DV/ShadowX-Hub/main/HopServer.lua"))()
-                                    if TeleportModule then
-                                        TeleportModule()
-                                    else
-                                        TeleportService:Teleport(placeId, LocalPlayer)
-                                    end
-                                end
-                            end)
-                        else
-                            -- Se for publico, reentra no mesmo servidor
-                            print("[ShadowX Update] Public server, rejoining same server: " .. jobId)
-                            pcall(function()
-                                TeleportService:TeleportToPlaceInstance(placeId, jobId, LocalPlayer)
-                            end)
-                            task.wait(1)
-                            -- Fallback se falhar
-                            pcall(function()
-                                TeleportService:Teleport(placeId, LocalPlayer)
-                            end)
-                        end
+                githubVersion = githubVersion:gsub("%s+", "")
+                if githubVersion ~= "" and githubVersion ~= getgenv().ShadowXVersion then
+                    print("[ShadowX Update] Nova versao: " .. githubVersion)
+                    local player = game:GetService("Players").LocalPlayer
+                    if not player or not player:FindFirstChild("PlayerGui") then return end
+                    local gui = Instance.new("ScreenGui")
+                    gui.Name = "ShadowXUpdate"
+                    gui.ResetOnSpawn = false
+                    gui.IgnoreGuiInset = true
+                    gui.DisplayOrder = 999999
+                    gui.Parent = player.PlayerGui
+                    local bg = Instance.new("Frame")
+                    bg.Size = UDim2.new(1,0,1,0)
+                    bg.BackgroundColor3 = Color3.fromRGB(0,0,0)
+                    bg.BackgroundTransparency = 0.3
+                    bg.Parent = gui
+                    local card = Instance.new("Frame")
+                    card.AnchorPoint = Vector2.new(0.5,0.5)
+                    card.Position = UDim2.new(0.5,0,0.5,0)
+                    card.Size = UDim2.new(0,350,0,200)
+                    card.BackgroundColor3 = Color3.fromRGB(15,15,20)
+                    card.Parent = bg
+                    local corner = Instance.new("UICorner")
+                    corner.CornerRadius = UDim.new(0,12)
+                    corner.Parent = card
+                    local stroke = Instance.new("UIStroke")
+                    stroke.Color = Color3.fromRGB(255,30,30)
+                    stroke.Thickness = 2
+                    stroke.Parent = card
+                    local title = Instance.new("TextLabel")
+                    title.Size = UDim2.new(1,0,0,40)
+                    title.Position = UDim2.new(0,0,0,10)
+                    title.BackgroundTransparency = 1
+                    title.Text = "ShadowX Hub Update"
+                    title.TextColor3 = Color3.fromRGB(255,255,255)
+                    title.Font = Enum.Font.GothamBold
+                    title.TextSize = 20
+                    title.Parent = card
+                    local msg = Instance.new("TextLabel")
+                    msg.Size = UDim2.new(1,0,0,100)
+                    msg.Position = UDim2.new(0,0,0,50)
+                    msg.BackgroundTransparency = 1
+                    msg.Text = "A new version of the script is available! Current: " .. getgenv().ShadowXVersion .. " New: " .. githubVersion .. " Rejoining..."
+                    msg.TextColor3 = Color3.fromRGB(200,200,200)
+                    msg.Font = Enum.Font.Gotham
+                    msg.TextSize = 14
+                    msg.TextWrapped = true
+                    msg.Parent = card
+                    task.wait(3)
+                    local TeleportService = game:GetService("TeleportService")
+                    local placeId = game.PlaceId
+                    local jobId = game.JobId
+                    local isPrivate = false
+                    pcall(function() if game.PrivateServerId and game.PrivateServerId ~= "" and game.PrivateServerOwnerId ~= 0 then isPrivate = true end end)
+                    if isPrivate then
+                        print("[ShadowX Update] Private, hopping less people")
+                        pcall(function() TeleportService:Teleport(placeId, player) end)
+                    else
+                        print("[ShadowX Update] Public, rejoining same server")
+                        pcall(function() TeleportService:TeleportToPlaceInstance(placeId, jobId, player) end)
+                        task.wait(1)
+                        pcall(function() TeleportService:Teleport(placeId, player) end)
                     end
                 end
             end
         end)
     end
 end)
-
-print("[ShadowX Update System] Auto update checker started - Checks GitHub every 60s")
-print("[ShadowX Update] GitHub URL: " .. getgenv().GitHubVersionURL)
+print("[ShadowX Update] Checker started")
